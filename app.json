@@ -1,4 +1,17 @@
 {
   "name": "CICDREACTNATIVE",
-  "displayName": "CICDREACTNATIVE"
+  "displayName": "CICDREACTNATIVE",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "2701d7d1-17ff-457f-a4f3-4e2d313dbd96"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/2701d7d1-17ff-457f-a4f3-4e2d313dbd96"
+    },
+    "android": {},
+    "ios": {}
+  }
 }

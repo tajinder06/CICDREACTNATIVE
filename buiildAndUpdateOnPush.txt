@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [closed]
 
 jobs:
   build-and-update:
@@ -36,22 +34,19 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Build APK (on merge)
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+      - name: Build APK
         run: |
           cd android
           ./gradlew assembleRelease
 
-      - name: Upload APK artifact (on merge)
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app
           path: android/app/build/outputs/apk/release/app-release.apk
           retention-days: 3
 
-      - name: EAS Update (on push)
-        if: github.event_name == 'push'
+      - name: EAS Update
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |

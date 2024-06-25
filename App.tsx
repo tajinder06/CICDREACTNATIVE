@@ -77,7 +77,7 @@ function App(): React.JSX.Element {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> john doe is an
+            Edit <Text style={styles.highlight}>App.tsx hi</Text> john doe is an
             Engineer
           </Section>
           <Section title="See Your Changes">

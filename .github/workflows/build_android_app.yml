@@ -81,4 +81,4 @@ jobs:
       - name: Publish update
         run: eas update --auto --non-interactive
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_TOKEN: ${{BTMtlMAthLaS8ei_0b9JKIyCGXNcx8oCTJHzOxbS }}

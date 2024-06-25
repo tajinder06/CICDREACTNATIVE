@@ -1,84 +1,58 @@
-name: App Workflow
+name: "Build Android app and EAS Update"
 
 on:
   push:
     branches:
       - main
   pull_request:
-    types:
-      - closed
+    types: [closed]
 
 jobs:
-  generate_apk:
-    if: github.event.pull_request.merged == true
+  build-and-update:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3
+      - name: Install Java
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'adopt'
+          cache: 'gradle'
 
-      - name: Setup Node.js
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
+
+      - name: Setup Node  
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup EAS
+      - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Build APK
-        run: eas build --platform android --profile preview --non-interactive --local
+      - name: Build APK (on merge)
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      - name: Upload APK artifact (on merge)
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 3
+
+      - name: EAS Update (on push)
+        if: github.event_name == 'push'
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-preview
-          path: build-output/*.apk
-
-  eas_update:
-    if: github.event_name == 'push'
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Setup EAS
-        run: npm install -g eas-cli
-
-      - name: Publish update
-        run: eas update --auto --non-interactive
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas update --auto

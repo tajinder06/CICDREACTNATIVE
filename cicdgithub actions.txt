@@ -42,3 +42,5 @@ jobs:
           name: app
           path: android/app/build/outputs/apk/release/app-release.apk
           retention-days: 3
+
+          BTMtlMAthLaS8ei_0b9JKIyCGXNcx8oCTJHzOxbS  EXPO_TOKEN

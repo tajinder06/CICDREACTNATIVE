@@ -78,9 +78,6 @@ jobs:
       - name: Setup EAS
         run: npm install -g eas-cli
 
-      - name: Configure EAS
-        run: echo ${{ secrets.EAS_ACCESS_TOKEN }}
-
       - name: Publish update
         run: eas update --auto --non-interactive
         env:

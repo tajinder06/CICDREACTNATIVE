@@ -7,6 +7,7 @@
         "projectId": "2701d7d1-17ff-457f-a4f3-4e2d313dbd96"
       }
     },
+    "jsEngine": "jsc",
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/2701d7d1-17ff-457f-a4f3-4e2d313dbd96"

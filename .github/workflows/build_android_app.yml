@@ -28,19 +28,6 @@ jobs:
         run: |
           echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 --decode > android/app/upload-keystore.jks
 
-      - name: Create credentials.json
-        run: |
-          echo '{
-            "android": {
-              "keystore": {
-                "keystorePath": "android/app/upload-keystore.jks",
-                "keystorePassword": "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}",
-                "keyAlias": "${{ secrets.ANDROID_KEY_ALIAS }}",
-                "keyPassword": "${{ secrets.ANDROID_KEY_PASSWORD }}"
-              }
-            }
-          }' > credentials.json
-
       - name: Build APK
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

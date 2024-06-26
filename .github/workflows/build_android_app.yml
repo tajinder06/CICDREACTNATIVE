@@ -35,7 +35,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          eas build --platform android --profile production --non-interactive --wait
+          eas build --platform android --profile production --wait
 
       - name: Download APK
         run: |

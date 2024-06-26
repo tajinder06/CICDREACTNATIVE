@@ -28,13 +28,18 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas build --platform android --profile production --non-interactive --output=./app-preview.apk
+          eas build --platform android --profile production --non-interactive --wait
+
+      - name: Download APK
+        run: |
+          BUILD_URL=$(eas build:list --json --limit=1 --platform=android --status=finished | jq -r '.[0].artifacts.buildUrl')
+          curl -o app-production.apk $BUILD_URL
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app
-          path: app-preview.apk
+          path: app-production.apk
           retention-days: 3
 
       - name: EAS Update

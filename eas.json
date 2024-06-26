@@ -13,10 +13,7 @@
       "channel": "preview"
     },
     "production": {
-      "channel": "production",
-      "env": {
-        "EXPO_USE_HERMS": "false"
-      }
+      "channel": "production"
     }
   },
   "submit": {

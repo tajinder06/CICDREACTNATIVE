@@ -55,4 +55,4 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas update --auto
+           eas update --auto --channel production

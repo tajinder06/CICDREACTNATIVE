@@ -6,17 +6,32 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "env": {
+        "EXPO_USE_HERMS": "false"
+      },
+      "android": {
+    "buildType": "apk"
+  }
     },
     "preview": {
-      "distribution": "internal",
-      "channel": "preview"
+      "distribution": "internal"
     },
     "production": {
-      "channel": "production"
+      "distribution": "store",
+      "channel": "production",
+      "env": {
+        "EXPO_USE_HERMS": "false"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      }
     }
   },
   "submit": {
     "production": {}
   }
 }
+
+

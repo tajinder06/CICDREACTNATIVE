@@ -28,7 +28,7 @@ jobs:
         run: npm ci
 
       - name: Build Android app
-        run: eas build --platform android --profile production --no-wait
+        run: npx eas build --platform android --profile productions
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 

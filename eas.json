@@ -25,9 +25,7 @@
       },
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease",
-        "credentialsSource": "local",
-        "releaseChannel": "production"
+        "gradleCommand": ":app:assembleRelease"
       }
     }
   },

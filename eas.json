@@ -13,7 +13,6 @@
       "channel": "preview"
     },
     "production": {
-      "distributon": "store",
       "channel": "production",
       "env": {
         "EXPO_USE_HERMS": "false"

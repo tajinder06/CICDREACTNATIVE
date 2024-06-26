@@ -1,58 +1,40 @@
-# name: "Build Android app and EAS Update"
+name: 'Build Android app with Expo'
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     types: [closed]
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   build-and-update:
-#     runs-on: macos-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-#       - name: Install Java
-#         uses: actions/setup-java@v4
-#         with:
-#           java-version: '17'
-#           distribution: 'adopt'
-#           cache: 'gradle'
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-#       - name: Validate Gradle wrapper
-#         uses: gradle/wrapper-validation-action@v2
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN_EXPO }}
 
-#       - name: Setup Node  
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: '20'
-#           cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
 
-#       - name: Install dependencies
-#         run: npm ci
+      - name: Build Android app
+        run: eas build --platform android --profile preview --non-interactive --no-wait
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-#       - name: Install EAS CLI
-#         run: npm install -g eas-cli
-
-#       - name: Build APK (on merge)
-#         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-#         run: |
-#           cd android
-#           ./gradlew assembleRelease
-
-#       - name: Upload APK artifact (on merge)
-#         if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: app
-#           path: android/app/build/outputs/apk/release/app-release.apk
-#           retention-days: 3
-
-#       - name: EAS Update (on push)
-#         if: github.event_name == 'push'
-#         env:
-#           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-#         run: |
-#           eas update --auto
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: ./android-build.apk
+          retention-days: 3

@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [closed]
 
 jobs:
   build-and-update:
@@ -13,16 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-          cache: 'gradle'
-
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v2
 
       - name: Setup Node  
         uses: actions/setup-node@v4
@@ -36,23 +24,21 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Build APK (on merge)
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        run: |
-          cd android
-          ./gradlew assembleRelease
-
-      - name: Upload APK artifact (on merge)
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 3
-
-      - name: EAS Update (on push)
-        if: github.event_name == 'push'
+      - name: Build APK
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
-          eas update --channel production --auto
+          eas build --platform android --profile production --non-interactive --output=./app-preview.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: app-preview.apk
+          retention-days: 3
+
+      - name: EAS Update
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas update --auto

@@ -11,6 +11,7 @@
     "runtimeVersion": "1.0.0",
     "updates": {
       "enabled": true,
+      "channel": "production",
       "url": "https://u.expo.dev/2701d7d1-17ff-457f-a4f3-4e2d313dbd96"
     },
     "android": {},
